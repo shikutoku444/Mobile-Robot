@@ -1,4 +1,4 @@
-% Fully Enhanced Medical Assistant TurtleBot Simulation with Live Navigation
+% Medical Assistant TurtleBot Simulation with Live Navigation
 clc; clear; close all;
 
 %% ==================== 1. Environment Setup ====================
@@ -18,7 +18,7 @@ setOccupancy(map, obstaclePositions, 1);
 % Dynamic obstacles: simulated moving people
 dynamicObstacles = [8 8; 12 10; 15 15; 4 12; 16 8];
 
-%% ==================== 2. Robot Configuration ====================
+%%  2. Robot Configuration 
 robotRadius = 0.3;
 batteryCapacity = 100; % Battery capacity in percentage
 energyConsumptionRate = 0.1; % Energy consumed per meter traveled
@@ -48,7 +48,7 @@ robot = differentialDriveKinematics(...
     "WheelRadius", 0.1, ...
     "WheelSpeedRange", [-10 10]*2*pi);
 
-%% ==================== 3. Create Visualization Figures ====================
+%%  3. Create Visualization Figures 
 fig1 = figure('Name', 'TurtleBot Navigation', 'Position', [100 100 800 700]);
 ax1 = axes(fig1);
 show(map, 'Parent', ax1);
@@ -70,7 +70,7 @@ rlim(lidarFig, [0 5]);
 title(lidarFig, 'Live LIDAR Scan');
 grid(lidarFig, 'on');
 
-%% ==================== 4. Path Planning Configuration ====================
+%%  4. Path Planning Configuration 
 ss = stateSpaceSE2([map.XWorldLimits; map.YWorldLimits; [-pi pi]]);
 sv = validatorOccupancyMap(ss);
 sv.Map = map;
@@ -85,25 +85,25 @@ controller.DesiredLinearVelocity = 0.4;
 controller.MaxAngularVelocity = 2.0;
 controller.LookaheadDistance = 0.5;
 
-%% ==================== 5. Simulation Parameters ====================
+%%  5. Simulation Parameters 
 goalRadius = 0.5;
 sampleTime = 0.1;
 vizRate = rateControl(1/sampleTime);
 global simulationRunning;
 simulationRunning = true;
 
-%% ==================== 6. Initialize Live Visualization ====================
+%%  6. Initialize Live Visualization 
 robotBody = plot(ax1, pose(1), pose(2), 'ks', 'MarkerSize', 12, 'LineWidth', 2);
 robotOrientation = quiver(ax1, pose(1), pose(2), 0.5*cos(pose(3)), 0.5*sin(pose(3)), 'r', 'LineWidth', 1.5);
 traveledPath = pose(1:2);
 travelPlot = plot(ax1, traveledPath(:,1), traveledPath(:,2), 'b-', 'LineWidth', 1.5);
 
-%% ==================== Data Collection for Graph ====================
+%%  Data Collection for Graph 
 timeData = [];
 distanceData = [];
 batteryLevel = batteryCapacity;
 
-%% ==================== 7. Main Simulation Loop ====================
+%%  7. Main Simulation Loop 
 simulationTime = 0;
 start_pose = [start 0];
 goal_pose = [goal 0];
@@ -253,7 +253,7 @@ while simulationRunning
     end
 end
 
-%% ==================== 8. Finalize Visualization ====================
+%%  8. Finalize Visualization 
 figure(fig1);
 legend([startPlot, goalPlot, robotBody, pathPlot, travelPlot], ...
     {'Start', 'Goal', 'Robot', 'Planned Path', 'Traveled Path'}, ...
@@ -261,7 +261,7 @@ legend([startPlot, goalPlot, robotBody, pathPlot, travelPlot], ...
 figure(fig2);
 text(10, 10, 'MISSION COMPLETE', 'Color', 'g', 'FontSize', 14, 'FontWeight', 'bold');
 
-%% ==================== Plot Distance vs Time Graph ====================
+%%  Plot Distance vs Time Graph 
 figure;
 plot(timeData, distanceData, 'b-', 'LineWidth', 1.5);
 title('Distance Traveled Over Time');
@@ -269,7 +269,7 @@ xlabel('Time (s)');
 ylabel('Distance Traveled (m)');
 grid on;
 
-%% ==================== Helper Functions ====================
+%%  Helper Functions 
 function [ranges, angles] = simulateLidar(pose, map, dynamicObstacles)
     angles = linspace(-pi, pi, 180);
     ranges = zeros(size(angles));
