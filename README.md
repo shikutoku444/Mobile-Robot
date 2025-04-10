@@ -1,7 +1,7 @@
 % Medical Assistant TurtleBot Simulation with Live Navigation
 clc; clear; close all;
 
-%% ==================== 1. Environment Setup ====================
+%%  1. Environment Setup 
 map = binaryOccupancyMap(20, 20, 5);
 % Add more static obstacles (hospital-like environment)
 obstaclePositions = [
